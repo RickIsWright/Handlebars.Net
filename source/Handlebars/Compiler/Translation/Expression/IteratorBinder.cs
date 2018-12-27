@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.IO;
@@ -19,30 +19,6 @@ namespace HandlebarsDotNet.Compiler
         private IteratorBinder(CompilationContext context)
             : base(context)
         {
-        }
-
-        protected override Expression VisitBlock(BlockExpression node)
-        {
-            return Expression.Block(
-                node.Type,
-                node.Variables,
-                node.Expressions.Select(n => Visit(n)));
-        }
-
-        protected override Expression VisitConditional(ConditionalExpression node)
-        {
-            return Expression.Condition(
-                Visit(node.Test),
-                Visit(node.IfTrue),
-                Visit(node.IfFalse));
-        }
-
-        protected override Expression VisitUnary(UnaryExpression node)
-        {
-            return Expression.MakeUnary(
-                node.NodeType,
-                Visit(node.Operand),
-                node.Type);
         }
 
         protected override Expression VisitIteratorExpression(IteratorExpression iex)
@@ -334,7 +310,7 @@ namespace HandlebarsDotNet.Compiler
         private class IteratorBindingContext : BindingContext
         {
             public IteratorBindingContext(BindingContext context)
-                : base(context.Value, context.TextWriter, context.ParentContext, context.TemplatePath)
+                : base(context.Value, context.TextWriter, context.ParentContext, context.TemplatePath, context.InlinePartialTemplates)
             {
             }
 
@@ -348,7 +324,7 @@ namespace HandlebarsDotNet.Compiler
         private class ObjectEnumeratorBindingContext : BindingContext
         {
             public ObjectEnumeratorBindingContext(BindingContext context)
-                : base(context.Value, context.TextWriter, context.ParentContext, context.TemplatePath)
+                : base(context.Value, context.TextWriter, context.ParentContext, context.TemplatePath, context.InlinePartialTemplates)
             {
             }
 
